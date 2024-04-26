@@ -63,6 +63,12 @@ for i in range(4):
     npc1_walk.append(frame)
 frame_index_npc1 = 0
 
+#_______importacao balao npc1_________
+balao_npc1 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'lust_lines')
+balao_npc1_path = os.path.join(balao_npc1, f'lust_npc_line_1.png')
+balao_npc1 = pygame.image.load(balao_npc1_path).convert_alpha()
+balao_npc1 = pygame.transform.scale(balao_npc1, (balao_npc1.get_width() * 0.4, balao_npc1.get_height() * 0.4))
+
 #__________importar animação do vortice_______________
 vortice_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'map_lust_vortex_souls_animation')
 vortice = []
@@ -82,6 +88,97 @@ intro_map_path = os.path.join(intro_map, f'lust_intro.png')
 intro_map = pygame.image.load(intro_map_path).convert_alpha()
 intro_map = pygame.transform.scale(intro_map, (intro_map.get_width() * 0.8, intro_map.get_height() * 0.8))
 alpha_intro_map = 0  # Nível de transparência inicial
+
+#__________importar animação do player a dançar up_______________
+player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_dance_move_up_new')
+player_dance_up = []
+# Carrega cada quadro da animação de forma isolada
+for i in range(4):
+    frame_path = os.path.join(player_dance_dir, f'tile00{i}.png')
+    frame = pygame.image.load(frame_path).convert_alpha()
+    frame_w = frame.get_width()
+    frame_h = frame.get_height()
+    frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
+    player_dance_up.append(frame)
+
+#__________importar animação do player a dançar down_______________
+player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_dance_move_down')
+player_dance_down = []
+# Carrega cada quadro da animação de forma isolada
+for i in range(4):
+    frame_path = os.path.join(player_dance_dir, f'tile00{i}.png')
+    frame = pygame.image.load(frame_path).convert_alpha()
+    frame_w = frame.get_width()
+    frame_h = frame.get_height()
+    frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
+    player_dance_down.append(frame)
+
+#__________importar animação do player a dançar left_______________
+player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_dance_move_left')
+player_dance_left = []
+# Carrega cada quadro da animação de forma isolada
+for i in range(4):
+    frame_path = os.path.join(player_dance_dir, f'tile00{i}.png')
+    frame = pygame.image.load(frame_path).convert_alpha()
+    frame_w = frame.get_width()
+    frame_h = frame.get_height()
+    frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
+    player_dance_left.append(frame)
+
+#__________importar animação do player a dançar right_______________
+player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_dance_move_right')
+player_dance_right = []
+# Carrega cada quadro da animação de forma isolada
+for i in range(4):
+    frame_path = os.path.join(player_dance_dir, f'tile00{i}.png')
+    frame = pygame.image.load(frame_path).convert_alpha()
+    frame_w = frame.get_width()
+    frame_h = frame.get_height()
+    frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
+    player_dance_right.append(frame)
+
+frame_index_player_dance = 0
+
+#________importar silhuetas__________
+sil_up = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'silhouette')
+sil_up_path = os.path.join(sil_up, f'up_move_silhouette_new.png')
+sil_up = pygame.image.load(sil_up_path).convert_alpha()
+sil_up = pygame.transform.scale(sil_up, (sil_up.get_width() * 3.5, sil_up.get_height() * 3.5))
+
+sil_down = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'silhouette')
+sil_down_path = os.path.join(sil_down, f'down_move_silhouette.png')
+sil_down = pygame.image.load(sil_down_path).convert_alpha()
+sil_down = pygame.transform.scale(sil_down, (sil_down.get_width() * 3.5, sil_down.get_height() * 3.5))
+
+sil_left = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'silhouette')
+sil_left_path = os.path.join(sil_left, f'left_move_silhouette.png')
+sil_left = pygame.image.load(sil_left_path).convert_alpha()
+sil_left = pygame.transform.scale(sil_left, (sil_left.get_width() * 3.5, sil_left.get_height() * 3.5))
+
+sil_right = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'silhouette')
+sil_right_path = os.path.join(sil_right, f'right_move_silhouette.png')
+sil_right = pygame.image.load(sil_right_path).convert_alpha()
+sil_right = pygame.transform.scale(sil_right, (sil_right.get_width() * 3.5, sil_right.get_height() * 3.5))
+
+#________importacao do judge___________
+judge_2 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'judges')
+judge_2_path = os.path.join(judge_2, f'minos.png')
+judge_2 = pygame.image.load(judge_2_path).convert_alpha()
+judge_2 = pygame.transform.scale(judge_2, (judge_2.get_width() * 1.2, judge_2.get_height() * 1.2))
+
+#_______importacao balao judge 1_________
+balao_judge_1 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'limbo_lines_new')
+balao_judge_1_path = os.path.join(balao_judge_1, f'limbo_judge_line_1_new.png')
+balao_judge_1 = pygame.image.load(balao_judge_1_path).convert_alpha()
+balao_judge_1 = pygame.transform.scale(balao_judge_1, (balao_judge_1.get_width() * 0.4, balao_judge_1.get_height() * 0.4))
+
+#_______importacao balao judge 2_________
+balao_judge_2 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'limbo_lines_new')
+balao_judge_2_path = os.path.join(balao_judge_2, f'limbo_judge_line_2_new.png')
+balao_judge_2 = pygame.image.load(balao_judge_2_path).convert_alpha()
+balao_judge_2 = pygame.transform.scale(balao_judge_2, (balao_judge_2.get_width() * 0.4, balao_judge_2.get_height() * 0.4))
+
+
 
 # Define o fator de zoom
 zoom_factor = 4
@@ -117,6 +214,7 @@ danca = False
 danca_init = False
 passar_nivel = False
 intro = False
+check_npc1 = True
 run = True
 while run:
     for event in pygame.event.get():
@@ -176,7 +274,6 @@ while run:
             vortice_y += desl_player
             intro_map_y += desl_player
 
-
     print(mapa_x, mapa_y)
 
     screen.fill(BROWN_MAP)
@@ -190,6 +287,11 @@ while run:
     if frame_index_npc1 >= len(npc1_walk):
         frame_index_npc1 = 0
     screen.blit(npc1_walk[int(frame_index_npc1)], (npc1_x, npc1_y))
+
+    # __________desenhar balao npc 1__________________
+    if mapa_x > -620 and mapa_x < -100 and mapa_y > -2715 and mapa_y < -2100:
+        check_npc1 = True
+        screen.blit(balao_npc1, (npc1_x - 140, npc1_y - 300))
 
     # ____________desenhar vortice_________________________
     frame_index_vortice += 0.25
