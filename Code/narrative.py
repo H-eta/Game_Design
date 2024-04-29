@@ -14,6 +14,8 @@ screen = pygame.display.set_mode((screen_w, screen_h), pygame.FULLSCREEN)
 pygame.display.set_caption("Story Time")
 
 #__________importar narrativa_______________
+script_dir = os.path.dirname(__file__)
+game_design_dir = os.path.dirname(os.path.dirname(script_dir))
 narrativa_dir = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'Narrative')
 narrativa = []
 

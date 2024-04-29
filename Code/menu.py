@@ -16,30 +16,45 @@ screen_w, screen_h = pyautogui.size()
 screen = pygame.display.set_mode((screen_w, screen_h), pygame.FULLSCREEN)
 pygame.display.set_caption("Main Menu")
 
-picture = pygame.image.load('Sprites/background/sound_menu.png')
-picture = pygame.transform.scale(picture, (1920, 1080))
-
 script_dir = os.path.dirname(__file__)
 game_design_dir = os.path.dirname(os.path.dirname(script_dir))
+picture = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'background')
+picture_path = os.path.join(picture, f'sound_menu.png')
+picture = pygame.image.load(picture_path).convert_alpha()
+picture = pygame.transform.scale(picture, (1920, 1080))
+
+
 
 TEXT_COL = (255, 255, 255)
 
 #Music
-pygame.mixer.music.load("Music/7_teste.mp3")
-pygame.mixer.music.play(loops=-1)
 
+background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', '7_teste.mp3')
+pygame.mixer.music.load(background_music_file)
+pygame.mixer.music.play(-1)  # o valor -1 indica que a música será reproduzida em loop
 
 #load button images
-resume_img = pygame.image.load("Code/images/button_resume.png").convert_alpha()
-options_img = pygame.image.load("Code/images/button_options.png").convert_alpha()
-quit_img = pygame.image.load("Code/images/button_quit.png").convert_alpha()
-back_img = pygame.image.load('Code/images/button_back.png').convert_alpha()
+resume_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
+resume_img_path = os.path.join(resume_img, f'button_resume.png')
+resume_img = pygame.image.load(resume_img_path).convert_alpha()
+
+options_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
+options_img_path = os.path.join(options_img, f'button_options.png')
+options_img = pygame.image.load(options_img_path).convert_alpha()
+
+quit_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
+quit_img_path = os.path.join(quit_img, f'button_quit.png')
+quit_img = pygame.image.load(quit_img_path).convert_alpha()
+
+back_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
+back_img_path = os.path.join(back_img, f'button_quit.png')
+back_img = pygame.image.load(back_img_path).convert_alpha()
 
 #create button instances
-resume_button = button.Button(screen.get_size()[0]//3, 400, resume_img, 1)
-options_button = button.Button(screen.get_size()[0]//3, 550, options_img, 1)
-quit_button = button.Button(screen.get_size()[0]//3, 700, quit_img, 1)
-back_button = button.Button(screen.get_size()[0]//3, 850, back_img, 1)
+resume_button = button.Button(screen.get_size()[0]//2-200, 400, resume_img, 1)
+options_button = button.Button(screen.get_size()[0]//2-200, 550, options_img, 1)
+quit_button = button.Button(screen.get_size()[0]//2-200, 700, quit_img, 1)
+back_button = button.Button(screen.get_size()[0]//2-200, 850, back_img, 1)
 
 #create slider instances
 center = (screen.get_size()[0]//2, screen.get_size()[1]//2)
@@ -64,7 +79,7 @@ def draw_text(text, font, text_col, x, y):
   screen.blit(img, (x - img.get_width()//2, y))
   
 
-
+clock = pygame.time.Clock()
 
 def init_main_menu():
 
@@ -100,15 +115,12 @@ def init_main_menu():
         pos = pygame.mouse.get_pos()
         mouse = pygame.mouse.get_pressed()
 
-
-
         screen.fill((52, 78, 91))
-
 
         #check menu state
         if menu_state == "main":            
             # Desenha o bg 
-            frame_index_bg += 0.025
+            frame_index_bg += 0.25
             if frame_index_bg >= len(bg_menu):
                 frame_index_bg = 0
             screen.blit(bg_menu[int(frame_index_bg)], (0, 0))
@@ -118,7 +130,7 @@ def init_main_menu():
             draw_text("SHALL WE DANCE?", getTitleFont(), TEXT_COL, center[0], 200)
 
             # Desenha o jogador 
-            frame_index_player += 0.025
+            frame_index_player += 0.25
             if frame_index_player >= len(player_walk):
                 frame_index_player = 0
             screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]//4, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
@@ -190,6 +202,8 @@ def init_main_menu():
 
 
         pygame.display.update()
+
+        clock.tick(30)
 
 
 
