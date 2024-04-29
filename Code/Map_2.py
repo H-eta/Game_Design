@@ -14,18 +14,20 @@ GREEN_MAP = (66, 82, 34)
 BROWN_MAP = (46, 27, 21)
 
 button_rect = pygame.Rect(screen_w - 100, 0, 100, 50)
+rect_battle1 = pygame.Rect(0, 0, screen_w, 160)
+rect_battle2 = pygame.Rect(0, screen_h-160, screen_w, 160)
 font = pygame.font.Font(None, 36)
 
 script_dir = os.path.dirname(__file__)
 game_design_dir = os.path.dirname(os.path.dirname(script_dir))
 
-#__________importar mapa de jogo nivel 1_____________
+#__________importar mapa de jogo nivel 2_____________
 mapa_l2 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'maps')
 mapa_l2_path = os.path.join(mapa_l2, f'map_circle_II_lust_not_finished_v3.png')
 mapa_l2_original = pygame.image.load(mapa_l2_path).convert_alpha()
 
 #__________importar animação do player_______________
-player_walk_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_chris_walking_front_pov_fixed')
+player_walk_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_chris_walking_front_pov_fixed_2')
 player_walk = []
 # Carrega cada quadro da animação de forma isolada
 for i in range(4):
@@ -49,6 +51,33 @@ for i in range(4):
     frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
     player_rotate.append(frame)
 frame_index_player_rotate = 0
+
+#__________importar animação do player a acertar a tecla_______________
+player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'floating_stars_animation')
+player_dance_good = []
+# Carrega cada quadro da animação de forma isolada
+for i in range(4):
+    frame_path = os.path.join(player_dance_dir, f'tile00{i}.png')
+    frame = pygame.image.load(frame_path).convert_alpha()
+    frame_w = frame.get_width()
+    frame_h = frame.get_height()
+    frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
+    player_dance_good.append(frame)
+
+#__________importar animação do player a errar a tecla_______________
+player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'floating_cloud_animation')
+player_dance_bad = []
+# Carrega cada quadro da animação de forma isolada
+for i in range(4):
+    frame_path = os.path.join(player_dance_dir, f'tile00{i}.png')
+    frame = pygame.image.load(frame_path).convert_alpha()
+    frame_w = frame.get_width()
+    frame_h = frame.get_height()
+    frame = pygame.transform.scale(frame, (frame.get_width() * 5, frame.get_height() * 5))
+    player_dance_bad.append(frame)
+
+frame_index_player_dance_good = 0
+frame_index_player_dance_bad = 0
 
 #__________importar animação do NPC1_______________
 npc1_walk_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'Lust_NPC_Francesca')
@@ -164,7 +193,7 @@ sil_right = pygame.transform.scale(sil_right, (sil_right.get_width() * 3.5, sil_
 judge_2 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'judges')
 judge_2_path = os.path.join(judge_2, f'minos.png')
 judge_2 = pygame.image.load(judge_2_path).convert_alpha()
-judge_2 = pygame.transform.scale(judge_2, (judge_2.get_width() * 1.2, judge_2.get_height() * 1.2))
+judge_2 = pygame.transform.scale(judge_2, (judge_2.get_width() * 3.3, judge_2.get_height() * 3.3))
 
 #_______importacao balao judge 1_________
 balao_judge_1 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'limbo_lines_new')
@@ -177,8 +206,6 @@ balao_judge_2 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'limbo_l
 balao_judge_2_path = os.path.join(balao_judge_2, f'limbo_judge_line_2_new.png')
 balao_judge_2 = pygame.image.load(balao_judge_2_path).convert_alpha()
 balao_judge_2 = pygame.transform.scale(balao_judge_2, (balao_judge_2.get_width() * 0.4, balao_judge_2.get_height() * 0.4))
-
-
 
 # Define o fator de zoom
 zoom_factor = 4
@@ -208,8 +235,6 @@ vortice_y = 0
 intro_map_x = 0
 intro_map_y = -80
 
-<<<<<<< Updated upstream
-=======
 #________posicao incial do judge________
 judge_x = 3290
 judge_y = 2800
@@ -266,18 +291,20 @@ sound_loser = pygame.mixer.Sound(sound_loser_file)
 #sound_loser_play = True
 sound_loser.set_volume(0.2)
 
->>>>>>> Stashed changes
 clock = pygame.time.Clock()
 set_judge = False
 danca = False
 danca_init = False
+comeca_a_danca = False
 passar_nivel = False
-<<<<<<< Updated upstream
-=======
-check_npc1 = True
->>>>>>> Stashed changes
+check_npc1 = False
 intro = False
-check_npc1 = True
+acertou_tecla_up = False
+acertou_tecla_left = False
+acertou_tecla_right = False
+acertou_tecla_down = False
+errou_na_tecla = False
+jogou_uma_vez = False
 run = True
 while run:
     for event in pygame.event.get():
@@ -287,13 +314,13 @@ while run:
             # Verifica se o clique do mouse foi dentro do botão "Sair"
             if button_rect.collidepoint(event.pos):
                 run = False
-<<<<<<< Updated upstream
-=======
         elif event.type == pygame.KEYDOWN:
             # Verifica se a tecla pressionada foi a tecla "Esc"
             if event.key == pygame.K_ESCAPE:
                 sound_1.stop()
                 pygame.mixer.music.unpause()
+                sound_loser.stop()
+                sound_achievement.stop()
                 danca = False
                 danca_init = False
                 comeca_a_danca = False
@@ -303,6 +330,7 @@ while run:
                 count_erro_tecla = 0
                 acertou_tecla = False
                 alpha = 0
+                alpha2 = 255
                 errou_na_tecla = False
                 jogou_uma_vez = False
                 if set_judge == True:
@@ -310,7 +338,6 @@ while run:
                         judge_x -= 470
                         judge_y += 350
                         set_judge = False
->>>>>>> Stashed changes
 
 #_________________deslocaao do player_______________
     # Obtém as teclas pressionadas
@@ -324,42 +351,78 @@ while run:
                 npc1_y += desl_player
                 vortice_y += desl_player
                 intro_map_y += desl_player
+                judge_y += desl_player
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             mapa_y -= desl_player
             npc1_y -= desl_player
             vortice_y -= desl_player
             intro_map_y -= desl_player
+            judge_y -= desl_player
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             if not (mapa_x > -1275 and mapa_y > -580):
                 mapa_x += desl_player
                 npc1_x += desl_player
                 vortice_x += desl_player
                 intro_map_x += desl_player
+                judge_x += desl_player
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             mapa_x -= desl_player
             npc1_x -= desl_player
             vortice_x -= desl_player
             intro_map_x -= desl_player
+            judge_x -= desl_player
         if danca == False and mapa_x>-100:
             mapa_x -= desl_player
             npc1_x -= desl_player
             vortice_x -= desl_player
             intro_map_x -= desl_player
+            judge_x -= desl_player
         if danca == False and mapa_x < -3730:
             mapa_x += desl_player
             npc1_x += desl_player
             vortice_x += desl_player
             intro_map_x += desl_player
+            judge_x += desl_player
         if danca == False and mapa_y > 2:
             mapa_y -= desl_player
             npc1_y -= desl_player
             vortice_y -= desl_player
             intro_map_y -= desl_player
+            judge_y -= desl_player
         if danca == False and mapa_y < -3400:
             mapa_y += desl_player
             npc1_y += desl_player
             vortice_y += desl_player
             intro_map_y += desl_player
+            judge_y += desl_player
+
+    # ________verifica se chegou a zona de danca_________
+    if passar_nivel == False:
+        if danca == False and mapa_x <= -2825 and mapa_x >= -3125 and mapa_y <= -2805 and mapa_y >= -3150:
+            if check_npc1 == True:
+                danca = True
+                if set_judge == False:
+                    judge_x += 470
+                    judge_y -= 350
+                    set_judge = True
+
+    # _______posiciona o player na zona de danca__________
+    if danca == True:
+        if ((mapa_x >= -3020) or (mapa_y <= -2650)):
+            if (mapa_x >= -3020):
+                mapa_x -= 10
+                judge_x -= 10
+                npc1_x -= 10
+            if (mapa_x < -3021):
+                mapa_x += 10
+                judge_x += 10
+                npc1_x += 10
+            if (mapa_y <= -2650):
+                mapa_y += 10
+                judge_y += 10
+                npc1_y += 10
+            if (mapa_y <= -2650 and mapa_x < -3021 or mapa_x >= -3020):
+                danca_init = True
 
     print(mapa_x, mapa_y)
 
@@ -392,33 +455,33 @@ while run:
         frame_index_vortice = 0
     screen.blit(vortice[int(frame_index_vortice)], (vortice_x, vortice_y))
 
+    # __________desenhar judge__________________
+    screen.blit(judge_2, (judge_x, judge_y))
+
+    # __________desenhar balao judge 1__________________
+    # if mapa_x > -474 and mapa_x < -60 and mapa_y > -3000 and mapa_y < -2595:
+    if passar_nivel == False and danca == False:
+        screen.blit(balao_judge_1, (judge_x - 110, judge_y - 140))
+
     # ____________desenhar jogador_________________________
     if mapa_x < -1980 and mapa_x > -3360 and mapa_y < -400 and mapa_y > -1440:
         frame_index_player_rotate += 0.2
         if frame_index_player_rotate >= len(player_rotate):
             frame_index_player_rotate = 0
-<<<<<<< Updated upstream
-        screen.blit(player_rotate[int(frame_index_player_rotate)], (player_x, player_y))
-=======
         if comeca_a_danca == False:
             screen.blit(player_rotate[int(frame_index_player_rotate)], (player_x, player_y))
         if sound_vortice_play == False:
             sound_vortice.play()
             sound_vortice_play = True
->>>>>>> Stashed changes
     else:
         frame_index_player += 0.25
         if frame_index_player >= len(player_walk):
             frame_index_player = 0
-<<<<<<< Updated upstream
-        screen.blit(player_walk[int(frame_index_player)], (player_x, player_y))
-=======
         if comeca_a_danca == False:
             screen.blit(player_walk[int(frame_index_player)], (player_x, player_y))
         if sound_vortice_play == True:
             sound_vortice.stop()
             sound_vortice_play = False
->>>>>>> Stashed changes
 
     #________apresentar intro do mapa__________
     if player_y == (screen_h - player_walk[0].get_height()) // 2:
@@ -431,8 +494,6 @@ while run:
             intro = True
         screen.blit(intro_map, (intro_map_x, intro_map_y))
 
-<<<<<<< Updated upstream
-=======
     # ________confirmação de inicio__________
     if danca_init == True:
         if keys[pygame.K_SPACE]:
@@ -621,7 +682,6 @@ while run:
         if danca == False and mapa_x <= -3480 and mapa_y <= -2915 and mapa_x > -3585 and mapa_y > -3120:
             run = False
 
->>>>>>> Stashed changes
     # ____________botao de sair_____________________________
     # Desenha o botão "Sair"
     pygame.draw.rect(screen, RED, button_rect)
