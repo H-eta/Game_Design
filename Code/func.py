@@ -1,10 +1,12 @@
 import pygame
+import os
 
 pygame.init()
 
-#define fonts
-title_font = pygame.font.Font("assets/Alkhemikal.ttf", 70)
-text_font = pygame.font.Font("assets/pixelplay.ttf", 50)
+script_dir = os.path.dirname(__file__)
+game_design_dir = os.path.dirname(os.path.dirname(script_dir))
+title_font = pygame.font.Font(os.path.join(game_design_dir, 'Game_Design/Font/titles/Alkhemikal.ttf'), 70)
+text_font = pygame.font.Font(os.path.join(game_design_dir, 'Game_Design/Font/text/pixelplay.ttf'), 50)
 
 def getTitleFont():
     return title_font
