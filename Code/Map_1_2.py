@@ -306,6 +306,31 @@ sound_1_file = os.path.join(game_design_dir, 'Game_Design', 'Music', '7_teste.mp
 sound_1 = pygame.mixer.Sound(sound_1_file)
 sound_1_play = True
 
+# Carregar e reproduzir a música de fundo
+background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'limbo_background_music_1.mp3')
+pygame.mixer.music.load(background_music_file)
+pygame.mixer.music.play(-1)  # o valor -1 indica que a música será reproduzida em loop
+
+#_________import do som de sussurro de npc______
+# Caminho para o diretório do script atual
+sound_sussurro_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'sussurros_npc_efeito.mp3')
+sound_sussurro = pygame.mixer.Sound(sound_sussurro_file)
+sound_sussurro_play = True
+
+#_________import do som de acertar a tecla______
+# Caminho para o diretório do script atual
+sound_achievement_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'achievement_sound_1.mp3')
+sound_achievement = pygame.mixer.Sound(sound_achievement_file)
+#sound_achievement_play = True
+sound_achievement.set_volume(0.2)
+
+#_________import do som de errar a tecla______
+# Caminho para o diretório do script atual
+sound_loser_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'loser_sound_1.mp3')
+sound_loser = pygame.mixer.Sound(sound_loser_file)
+#sound_loser_play = True
+sound_loser.set_volume(0.2)
+
 clock = pygame.time.Clock()
 set_judge = False
 danca = False
@@ -476,11 +501,6 @@ while run:
     screen.blit(top_half_sprite, (npc1_x + 392, npc1_y + 40))
     screen.blit(sprite_arvore, (npc1_x + 472, npc1_y + 40))
 
-# __________desenhar balao npc 1__________________
-    if mapa_x > -474 and mapa_x < -60 and mapa_y > -3000 and mapa_y < -2595:
-        check_npc1 = True
-        screen.blit(balao_npc1, (npc1_x - 140, npc1_y - 300))
-
 # ____________desenhar npc2_________________________
     # Desenha o npc2 na posição correta
     frame_index_npc2 += 0.25
@@ -488,22 +508,37 @@ while run:
         frame_index_npc2 = 0
     screen.blit(npc2_walk[int(frame_index_npc2)], (npc2_x, npc2_y))
 
-# __________desenhar balao npc 2__________________
-    if mapa_x > -3730 and mapa_x < -3250 and mapa_y > -405 and mapa_y < 0:
-        check_npc2 = True
-        screen.blit(balao_npc2, (npc2_x - 140, npc2_y - 300))
-
-# ____________desenhar npc3_________________________
+    # ____________desenhar npc3_________________________
     # Desenha o npc3 na posição correta
     frame_index_npc3 += 0.25
     if frame_index_npc3 >= len(npc3_walk):
         frame_index_npc3 = 0
     screen.blit(npc3_walk[int(frame_index_npc3)], (npc3_x, npc3_y))
 
+    # __________desenhar balao npc 1__________________
+    if mapa_x > -474 and mapa_x < -60 and mapa_y > -3000 and mapa_y < -2595:
+        check_npc1 = True
+        if sound_sussurro_play == True:
+            sound_sussurro.play()
+            sound_sussurro_play = False
+        screen.blit(balao_npc1, (npc1_x - 140, npc1_y - 300))
+# __________desenhar balao npc 2__________________
+    elif mapa_x > -3730 and mapa_x < -3250 and mapa_y > -405 and mapa_y < 0:
+        check_npc2 = True
+        if sound_sussurro_play == True:
+            sound_sussurro.play()
+            sound_sussurro_play = False
+        screen.blit(balao_npc2, (npc2_x - 140, npc2_y - 300))
 # __________desenhar balao npc 3__________________
-    if mapa_x > -3925 and mapa_x < -3430 and mapa_y > -2700 and mapa_y < -2145:
+    elif mapa_x > -3925 and mapa_x < -3430 and mapa_y > -2700 and mapa_y < -2145:
         check_npc3 = True
+        if sound_sussurro_play == True:
+            sound_sussurro.play()
+            sound_sussurro_play = False
         screen.blit(balao_npc3, (npc3_x - 140, npc3_y - 300))
+    else:
+        sound_sussurro.stop()
+        sound_sussurro_play = True
 
 # ________apresentar intro do mapa__________
     if player_y == (screen_h - player_walk[0].get_height()) // 2:
@@ -551,6 +586,7 @@ while run:
     if danca_init == True:
         if keys[pygame.K_SPACE]:
             comeca_a_danca = True
+            pygame.mixer.music.pause()
         #imprimir pergunta do judge para começar a dançar
         if comeca_a_danca == False:
             screen.blit(balao_judge_2, (judge_x - 110, judge_y - 140))
@@ -561,7 +597,6 @@ while run:
         if sound_1_play == True:
             sound_1.play()
             sound_1_play = False
-
         #imprime a animação do judge a agitar a cauda
         rect_ocultar_judge = pygame.Rect(judge_x, judge_y, (judge_cauda_move[0].get_width()),
                                          judge_cauda_move[0].get_height())
@@ -683,16 +718,115 @@ while run:
         print(count_acertos)
         alpha += delta_alpha[sequence]
         if alpha > 255:
+<<<<<<< Updated upstream
             alpha = 0
             sequence += 1
             jogou_uma_vez = False
+=======
+            # imprime as silhuetas para a sequencia
+            if lista_teclas[sequence] == "up":
+                sil_up.set_alpha(alpha2)
+                screen.blit(sil_up, (judge_x - 45 - alpha * 1.3, judge_y + 40))
+
+            if lista_teclas[sequence] == "left":
+                sil_left.set_alpha(alpha2)
+                screen.blit(sil_left, (judge_x - 45 - alpha * 1.3, judge_y + 40))
+
+            if lista_teclas[sequence] == "right":
+                sil_right.set_alpha(alpha2)
+                screen.blit(sil_right, (judge_x - 45 - alpha * 1.3, judge_y + 40))
+
+            alpha2 -= delta_alpha[sequence]
+            alpha += delta_alpha[sequence]
+            if alpha2 <= 0:
+                alpha = 0
+                alpha2 = 255
+                sequence += 1
+                sound_achievement.stop()
+                sound_loser.stop()
+                jogou_uma_vez = False
+>>>>>>> Stashed changes
             if sequence == 20:
                 danca = False
                 danca_init = False
                 passar_nivel = True
                 comeca_a_danca = False
                 sound_1.stop()
+                pygame.mixer.music.unpause()
 
+<<<<<<< Updated upstream
+=======
+        if sequence < 20:
+            #se o jogador clicar na tecla errada
+            if (lista_teclas[sequence] != "up" and (keys[pygame.K_w] or keys[pygame.K_UP])) or (lista_teclas[sequence] != "left" and (keys[pygame.K_a] or keys[pygame.K_LEFT])) or (lista_teclas[sequence] != "right" and (keys[pygame.K_d] or keys[pygame.K_RIGHT])):
+                if errou_na_tecla == False and jogou_uma_vez == False:
+                    count_erro_tecla += 1
+                    errou_na_tecla = True
+            print(count_erro_tecla)
+
+            # se a tecla for a correta faz a ação de dança correspodente
+            if acertou_tecla_up == True or acertou_tecla_left == True or acertou_tecla_right == True:
+                if acertou_tecla_up == True:
+                    # Desenha o jogador a dançar
+                    #rect_ocultar_player = pygame.Rect(player_x, player_y, (player_walk[0].get_width() / 2),
+                    #                                  player_walk[0].get_height())
+                    #pygame.draw.rect(screen, GREEN_MAP, rect_ocultar_player)
+
+                    screen.blit(player_dance_up[int(frame_index_player_dance)], (player_x, player_y))
+                    frame_index_player_dance += 0.25
+                    if frame_index_player_dance >= len(player_dance_up):
+                        acertou_tecla_up = False
+                        frame_index_player_dance = 0
+
+                if acertou_tecla_left == True:
+                    # Desenha o jogador a dançar
+                    #rect_ocultar_player = pygame.Rect(player_x, player_y, (player_walk[0].get_width() / 2),
+                    #                                  player_walk[0].get_height())
+                    #pygame.draw.rect(screen, GREEN_MAP, rect_ocultar_player)
+                    screen.blit(player_dance_left[int(frame_index_player_dance)], (player_x, player_y))
+                    frame_index_player_dance += 0.25
+                    if frame_index_player_dance >= len(player_dance_left):
+                        acertou_tecla_left = False
+                        frame_index_player_dance = 0
+
+                if acertou_tecla_right == True:
+                    # Desenha o jogador a dançar
+                    #rect_ocultar_player = pygame.Rect(player_x, player_y, (player_walk[0].get_width() / 2),
+                    #                                  player_walk[0].get_height())
+                    #pygame.draw.rect(screen, GREEN_MAP, rect_ocultar_player)
+                    screen.blit(player_dance_right[int(frame_index_player_dance)], (player_x, player_y))
+                    frame_index_player_dance += 0.25
+                    if frame_index_player_dance >= len(player_dance_right):
+                        acertou_tecla_right = False
+                        frame_index_player_dance = 0
+
+                # imprime os blilhos de acertar na tecla alem da animação da danca
+                if  frame_index_player_dance_good < len(player_dance_good):
+                    sound_achievement.play()
+                    screen.blit(player_dance_good[int(frame_index_player_dance_good)], (player_x-20, player_y-30))
+                    frame_index_player_dance_good += 0.25
+
+            #se nao for clicada nenhuma tecla ou for errada imprime o player na animação normal
+            else:
+                #rect_ocultar_player = pygame.Rect(player_x, player_y, (player_walk[0].get_width()/2),
+                #                                                      player_walk[0].get_height())
+                #pygame.draw.rect(screen, GREEN_MAP, rect_ocultar_player)
+                screen.blit(player_walk[int(frame_index_player)], (player_x, player_y))
+                #se errou na tecla imprime a nuvem no mc
+                if  frame_index_player_dance_bad < len(player_dance_bad) and errou_na_tecla == True:
+                    screen.blit(player_dance_bad[int(frame_index_player_dance_bad)], (player_x-20, player_y-30))
+                    frame_index_player_dance_bad += 0.25
+                    sound_loser.play()
+                    if frame_index_player_dance_bad >= len(player_dance_bad):
+                        errou_na_tecla = False
+                        frame_index_player_dance_bad = 0
+
+            if keys[pygame.K_w] or keys[pygame.K_UP] or keys[pygame.K_d] or keys[pygame.K_RIGHT] or keys[pygame.K_a] or keys[pygame.K_LEFT]:
+                jogou_uma_vez = True
+
+        print(count_acertos)
+
+>>>>>>> Stashed changes
 #_________depois de passar o nivel sai do jogo pelas escadas_______
     if passar_nivel == True:
         if frame_index_judge_evaluate < len(judge_evaluate):
@@ -718,4 +852,5 @@ while run:
 
     clock.tick(30)
 
+pygame.mixer.music.stop()
 pygame.quit()
