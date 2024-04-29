@@ -5,6 +5,7 @@ import pyautogui
 import button
 import slider
 from func import *
+import narrative
 import lv1 
 import lv2 
 
@@ -15,21 +16,24 @@ screen_w, screen_h = pyautogui.size()
 screen = pygame.display.set_mode((screen_w, screen_h), pygame.FULLSCREEN)
 pygame.display.set_caption("Main Menu")
 
+picture = pygame.image.load('Sprites/background/sound_menu.png')
+picture = pygame.transform.scale(picture, (1920, 1080))
+
 script_dir = os.path.dirname(__file__)
 game_design_dir = os.path.dirname(os.path.dirname(script_dir))
 
 TEXT_COL = (255, 255, 255)
 
 #Music
-pygame.mixer.music.load("assets/7_teste.mp3")
+pygame.mixer.music.load("Music/7_teste.mp3")
 pygame.mixer.music.play(loops=-1)
 
 
 #load button images
-resume_img = pygame.image.load("images/button_resume.png").convert_alpha()
-options_img = pygame.image.load("images/button_options.png").convert_alpha()
-quit_img = pygame.image.load("images/button_quit.png").convert_alpha()
-back_img = pygame.image.load('images/button_back.png').convert_alpha()
+resume_img = pygame.image.load("Code/images/button_resume.png").convert_alpha()
+options_img = pygame.image.load("Code/images/button_options.png").convert_alpha()
+quit_img = pygame.image.load("Code/images/button_quit.png").convert_alpha()
+back_img = pygame.image.load('Code/images/button_back.png').convert_alpha()
 
 #create button instances
 resume_button = button.Button(screen.get_size()[0]//3, 400, resume_img, 1)
@@ -47,13 +51,18 @@ dance_music_vol = slider.Slider((center[0], center[1]+250), (550,40), 0.5, 0, 10
 sliderArr = [menu_music_vol, map_music_vol, dance_music_vol]
 
 #__________importar animação do player_______________
-player_walk_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_chris_walking_front_pov_fixed')
+player_walk_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_chris_walking_front_pov_fixed_2')
 player_walk = []
+
+#__________importar animação do bg_______________
+bg_menu_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'background_main_animation')
+bg_menu = []
 
 
 def draw_text(text, font, text_col, x, y):
   img = font.render(text, True, text_col)
-  screen.blit(img, (x, y))
+  screen.blit(img, (x - img.get_width()//2, y))
+  
 
 
 
@@ -73,6 +82,16 @@ def init_main_menu():
         player_walk.append(frame)
         frame_index_player = 0
 
+        # Carrega cada quadro da animação de forma isolada
+    for j in range(9):
+        bg_frame_path = os.path.join(bg_menu_dir, f'tile00{j}.png')
+        bg_frame = pygame.image.load(bg_frame_path).convert_alpha()
+        bg_frame_w = bg_frame.get_width()
+        bg_frame_h = bg_frame.get_height()
+        bg_frame = pygame.transform.scale(bg_frame, (1920, 1080))
+        bg_menu.append(bg_frame)
+        frame_index_bg = 0    
+
     run = True
     while run:
 
@@ -82,21 +101,27 @@ def init_main_menu():
         mouse = pygame.mouse.get_pressed()
 
 
-        picture = pygame.image.load('assets/sound_menu.png')
-        picture = pygame.transform.scale(picture, (1920, 1080))
+
         screen.fill((52, 78, 91))
-        screen.blit(picture, (0, 0))
+
 
         #check menu state
-        if menu_state == "main":
-            draw_text("SHALL WE DANCE?", getTitleFont(), TEXT_COL, 600, 200)
+        if menu_state == "main":            
+            # Desenha o bg 
+            frame_index_bg += 0.025
+            if frame_index_bg >= len(bg_menu):
+                frame_index_bg = 0
+            screen.blit(bg_menu[int(frame_index_bg)], (0, 0))
+           
+            
+
+            draw_text("SHALL WE DANCE?", getTitleFont(), TEXT_COL, center[0], 200)
 
             # Desenha o jogador 
-            frame_index_player += 0.25
+            frame_index_player += 0.025
             if frame_index_player >= len(player_walk):
                 frame_index_player = 0
-            screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]/3, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
-
+            screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]//4, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
 
             #draw pause screen buttons
             if resume_button.draw(screen):
@@ -107,8 +132,10 @@ def init_main_menu():
                 pygame.quit()
         #check if the options menu is open
         if menu_state == "options":
+            screen.blit(picture, (0, 0))
+
             draw_text("Audio Settings", getTitleFont(), TEXT_COL, center[0], 200)
-           
+
             # Desenha o jogador 
             frame_index_player += 0.25
             if frame_index_player >= len(player_walk):
@@ -150,13 +177,14 @@ def init_main_menu():
             print("Iniciar\n")
             run = False
             pygame.mixer.music.stop()
+            narrative.narrate()
             lv1.play()
 
         #event handler
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    game_paused = True
+            #if event.type == pygame.KEYDOWN:
+                #if event.key == pygame.K_SPACE:
+                    #game_paused = True
             if event.type == pygame.QUIT:
                 run = False
 
