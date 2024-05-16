@@ -5,8 +5,8 @@ pygame.init()
 
 script_dir = os.path.dirname(__file__)
 game_design_dir = os.path.dirname(os.path.dirname(script_dir))
-title_font = pygame.font.Font(os.path.join(game_design_dir, 'Game_Design/Font/titles/Alkhemikal.ttf'), 80)
-text_font = pygame.font.Font(os.path.join(game_design_dir, 'Game_Design/Font/text/pixelplay.ttf'), 50)
+title_font = pygame.font.Font('Alkhemikal.ttf', 80)
+text_font = pygame.font.Font('pixelplay.ttf', 50)
 
 def getTitleFont():
     return title_font
@@ -42,6 +42,7 @@ def get_pause_state():
 menu_music_vol = 0.5
 map_music_vol = 0.5
 dance_music_vol = 0.5
+sound_effect_vol = 0.5
 
 def set_mmv(f):
     global menu_music_vol
@@ -52,6 +53,9 @@ def set_mmpv(f):
 def set_mdv(f):
     global dance_music_vol
     dance_music_vol = f
+def set_sev(f):
+    global sound_effect_vol
+    sound_effect_vol = f
     
 def get_mmv():
     return menu_music_vol
@@ -59,6 +63,8 @@ def get_mmpv():
     return map_music_vol
 def get_mdv():
     return dance_music_vol
+def get_sev():
+    return sound_effect_vol
 
 
 

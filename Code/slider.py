@@ -14,9 +14,9 @@ class Slider:
         self.hovered = False
         self.grabbed = False
 
-        self.slider_left_pos = self.pos[0] - (size[0]//2) 
+        self.slider_left_pos = self.pos[0] - (size[0]//2)
         self.slider_right_pos = self.pos[0] + (size[0]//2) 
-        self.slider_top_pos = self.pos[1] 
+        self.slider_top_pos = self.pos[1]
 
         self.min = min
         self.max = max

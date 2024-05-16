@@ -27,14 +27,9 @@ picture = pygame.transform.scale(picture, (1920, 1080))
 
 TEXT_COL = (255, 255, 255)
 
-#Music
-
-background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', '7_teste.mp3')
-pygame.mixer.music.load(background_music_file)
-pygame.mixer.music.play(-1)  # o valor -1 indica que a música será reproduzida em loop
 
 #load button images
-resume_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
+"""resume_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
 resume_img_path = os.path.join(resume_img, f'button_resume.png')
 resume_img = pygame.image.load(resume_img_path).convert_alpha()
 
@@ -48,29 +43,50 @@ quit_img = pygame.image.load(quit_img_path).convert_alpha()
 
 back_img = os.path.join(game_design_dir, 'Game_Design', 'Code', 'images')
 back_img_path = os.path.join(back_img, f'button_quit.png')
-back_img = pygame.image.load(back_img_path).convert_alpha()
+back_img = pygame.image.load(back_img_path).convert_alpha()"""
 
-#create button instances
-resume_button = button.Button(screen.get_size()[0]//2-200, 400, resume_img, 1)
-options_button = button.Button(screen.get_size()[0]//2-200, 550, options_img, 1)
-quit_button = button.Button(screen.get_size()[0]//2-200, 700, quit_img, 1)
-back_button = button.Button(screen.get_size()[0]//2-200, 850, back_img, 1)
+resume_img = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'buttons')
+resume_img_path = os.path.join(resume_img, f'button_play_2.png')
+resume_img = pygame.image.load(resume_img_path).convert_alpha()
+
+options_img = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'buttons')
+options_img_path = os.path.join(options_img, f'button_sound_2.png')
+options_img = pygame.image.load(options_img_path).convert_alpha()
+
+quit_img = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'buttons')
+quit_img_path = os.path.join(quit_img, f'button_exit_2.png')
+quit_img = pygame.image.load(quit_img_path).convert_alpha()
+
+back_img = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'buttons')
+back_img_path = os.path.join(back_img, f'button_exit_2.png')
+back_img = pygame.image.load(back_img_path).convert_alpha()
 
 #create slider instances
 center = (screen.get_size()[0]//2, screen.get_size()[1]//2)
 
-menu_music_vol = slider.Slider((center[0], center[1]- 50), (550,40), 0.5, 0, 100)
-map_music_vol = slider.Slider((center[0], center[1] + 100), (550,40), 0.5, 0, 100)
-dance_music_vol = slider.Slider((center[0], center[1]+250), (550,40), 0.5, 0, 100)
+#create button instances
+resume_button = button.Button((center[0] - 90 - resume_img.get_width() // 2), 360, resume_img, 1.5)
+options_button = button.Button((center[0] - 70 - options_img.get_width() // 2), 585, options_img, 1.5)
+quit_button = button.Button((center[0] - 57 - quit_img.get_width() // 2), 760, quit_img, 1.5)
+back_button = button.Button((center[0] - 57 - back_img.get_width() // 2), 860, back_img, 1.5)
 
-sliderArr = [menu_music_vol, map_music_vol, dance_music_vol]
+
+
+menu_music_vol = slider.Slider((center[0], center[1] - 165), (550,40), 0.5, 0, 100)
+#map_music_vol = slider.Slider((center[0]+ 150, center[1] - 10), (550,40), 0.5, 0, 100)
+#dance_music_vol = slider.Slider((center[0]+ 150, center[1] + 140), (550,40), 0.5, 0, 100)
+#sound_effect_vol = slider.Slider((center[0]+ 150, center[1] + 290), (550,40), 0.5, 0, 100)
+sound_effect_vol = slider.Slider((center[0], center[1] - 15), (550,40), 0.5, 0, 100)
+
+#sliderArr = [menu_music_vol, map_music_vol, dance_music_vol, sound_effect_vol]
+sliderArr = [menu_music_vol, sound_effect_vol]
 
 #__________importar animação do player_______________
 player_walk_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_chris_walking_front_pov_fixed_2')
 player_walk = []
 
 #__________importar animação do bg_______________
-bg_menu_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'background_main_animation')
+bg_menu_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'background_main_animation_new')
 bg_menu = []
 
 
@@ -83,6 +99,9 @@ clock = pygame.time.Clock()
 
 def init_main_menu():
 
+    background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'lenha_arder.mp3')
+    pygame.mixer.music.load(background_music_file)
+    pygame.mixer.music.play(-1,0,1000)  # o valor -1 indica que a música será reproduzida em loop
 
     print(" menu iniciado\n")
     menu_state = "main"
@@ -96,6 +115,12 @@ def init_main_menu():
         frame = pygame.transform.scale(frame, (frame.get_width() * 9, frame.get_height() * 9))
         player_walk.append(frame)
         frame_index_player = 0
+
+    # __________importar titulo de jogo_______________
+    titulo = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'background')
+    titulo_path = os.path.join(titulo, f'main_menu_title_2.png')
+    titulo = pygame.image.load(titulo_path).convert_alpha()
+    titulo = pygame.transform.scale(titulo, (titulo.get_width() * 0.6, titulo.get_height() * 0.6))
 
         # Carrega cada quadro da animação de forma isolada
     for j in range(9):
@@ -119,21 +144,21 @@ def init_main_menu():
 
         #check menu state
         if menu_state == "main":            
-            # Desenha o bg 
+            # Desenha o bg
             frame_index_bg += 0.25
             if frame_index_bg >= len(bg_menu):
                 frame_index_bg = 0
             screen.blit(bg_menu[int(frame_index_bg)], (0, 0))
-           
-            
 
-            draw_text("SHALL WE DANCE?", getTitleFont(), TEXT_COL, center[0], 200)
+            screen.blit(titulo, ((screen_w - titulo.get_width()) // 2, ((screen_h - titulo.get_height()) // 2) -50))
 
-            # Desenha o jogador 
-            frame_index_player += 0.25
-            if frame_index_player >= len(player_walk):
-                frame_index_player = 0
-            screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]//4, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
+            #draw_text("SHALL WE DANCE?", getTitleFont(), TEXT_COL, center[0], 200)
+
+            # Desenha o jogador
+            #frame_index_player += 0.2
+            #if frame_index_player >= len(player_walk):
+            #    frame_index_player = 0
+            #screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]//4, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
 
             #draw pause screen buttons
             if resume_button.draw(screen):
@@ -149,22 +174,28 @@ def init_main_menu():
             draw_text("Audio Settings", getTitleFont(), TEXT_COL, center[0], 200)
 
             # Desenha o jogador 
-            frame_index_player += 0.25
-            if frame_index_player >= len(player_walk):
-                frame_index_player = 0
-            screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]//4, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
+            #frame_index_player += 0.25
+            #if frame_index_player >= len(player_walk):
+            #    frame_index_player = 0
+            #screen.blit(player_walk[int(frame_index_player)], (screen.get_size()[0] - screen.get_size()[0]//4, center[1] - player_walk[int(frame_index_player)].get_height ()//2))
             
             #draw the different options buttons
-            draw_text("Menu Music Volume", getTextFont(), TEXT_COL, center[0] - 700, center[1]- 75)
-            draw_text("Map Music Volume", getTextFont(), TEXT_COL, center[0] - 700, center[1] + 75)
-            draw_text("Dance Music Volume", getTextFont(), TEXT_COL, center[0] - 700, center[1] + 225)
+            draw_text("Music", getTextFont(), TEXT_COL, center[0] - 550, center[1]- 180)
+            #draw_text("Map Music Volume", getTextFont(), TEXT_COL, center[0] - 550, center[1] - 30)
+            #draw_text("Dance Music Volume", getTextFont(), TEXT_COL, center[0] - 550, center[1] + 120)
+            #draw_text("Sound Effects Volume", getTextFont(), TEXT_COL, center[0] - 550, center[1] + 270)
+            draw_text("Sound Effects", getTextFont(), TEXT_COL, center[0] - 550, center[1] - 30)
 
-            draw_text(str(menu_music_vol.get_value())+"%", getTextFont(), TEXT_COL, center[0] + 350, center[1] - 75)
+            draw_text(str(menu_music_vol.get_value())+"%", getTextFont(), TEXT_COL, center[0] + 400, center[1] - 180)
             set_mmv(float(menu_music_vol.get_value())/100)
-            draw_text(str(map_music_vol.get_value())+"%", getTextFont(), TEXT_COL, center[0] + 350, center[1] + 75)
-            set_mmpv(float(map_music_vol.get_value())/100)
-            draw_text(str(dance_music_vol.get_value())+"%", getTextFont(), TEXT_COL, center[0] + 350, center[1] + 225)
-            set_mdv(float(dance_music_vol.get_value())/100)
+            #draw_text(str(map_music_vol.get_value())+"%", getTextFont(), TEXT_COL, center[0] + 500, center[1] - 30)
+            #set_mmpv(float(map_music_vol.get_value())/100)
+            #draw_text(str(dance_music_vol.get_value())+"%", getTextFont(), TEXT_COL, center[0] + 500, center[1] + 120)
+            #set_mdv(float(dance_music_vol.get_value())/100)
+            #draw_text(str(sound_effect_vol.get_value()) + "%", getTextFont(), TEXT_COL, center[0] + 500, center[1] + 270)
+            #set_mdv(float(sound_effect_vol.get_value()) / 100)
+            draw_text(str(sound_effect_vol.get_value()) + "%", getTextFont(), TEXT_COL, center[0] + 400, center[1] - 30)
+            set_sev(float(sound_effect_vol.get_value()) / 100)
 
             for slider in sliderArr:
                 if slider.container_rect.collidepoint(pos):
@@ -187,10 +218,9 @@ def init_main_menu():
         
         if menu_state == "dance":
             print("Iniciar\n")
-            run = False
+            #run = False
             pygame.mixer.music.stop()
             narrative.narrate()
-            lv1.play()
 
         #event handler
         for event in pygame.event.get():
