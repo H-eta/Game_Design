@@ -22,6 +22,7 @@ def play():
 
     button_rect = pygame.Rect(screen_w - 70, 0, 70, 60)
     button_rect2 = pygame.Rect(0, 50, 270, 80)
+    button_rect3 = pygame.Rect(0, 50, 300, 80)
     rect_battle1 = pygame.Rect(0, 0, screen_w, 160)
     rect_battle2 = pygame.Rect(0, screen_h - 160, screen_w, 160)
     font = pygame.font.Font(None, 36)
@@ -84,6 +85,13 @@ def play():
     intro_map = pygame.image.load(intro_map_path).convert_alpha()
     intro_map = pygame.transform.scale(intro_map, (intro_map.get_width() * 0.8, intro_map.get_height() * 0.8))
     alpha_intro_map = 0  # Nível de transparência inicial
+
+    # __________importar intro de fail_______________
+    intro_fail = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'map_intro')
+    intro_fail_path = os.path.join(intro_fail, f'intro_fail.png')
+    intro_fail = pygame.image.load(intro_fail_path).convert_alpha()
+    intro_fail = pygame.transform.scale(intro_fail, (intro_fail.get_width() * 0.8, intro_fail.get_height() * 0.8))
+    alpha_intro_fail = 0  # Nível de transparência inicial
 
     # __________importar animação do player a dançar up_______________
     player_dance_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'animation_dance_move_up_new')
@@ -253,43 +261,47 @@ def play():
     # ________transparencia das silhuetas_________
     alpha = 0  # Nível de transparência inicial
     alpha2 = 255
-    # delta_alpha = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-    #                10, 10, 10, 10, 10, 10, 10, 10, 10, 10]  # Incremento/decremento na opacidade
-    delta_alpha = [6] * 20
+    delta_alpha = [6, 8, 10, 8, 10, 12, 10, 10, 10, 12,
+                    10, 10, 12, 10, 10, 8, 10, 10, 12, 10,
+                    10, 10, 12, 10, 10, 10, 10, 8, 6, 6]  # Incremento/decremento na opacidade
+    #delta_alpha = [10] * 30
 
     # _______sequencia de danca_________
     sequence = 0
-    lista_teclas = ["down", "left", "right", "down", "right", "left", "down", "left", "right", "right",
-                    "up", "up", "left", "right", "left", "right", "left", "right", "left", "up"]
+    lista_teclas = ["down", "left", "right", "down", "right", "left", "down", "left", "right", "down",
+                    "up", "left", "right", "down", "right", "left", "down", "left", "right", "down",
+                    "up", "left", "left", "right", "up", "down", "left", "right", "left", "up"]
     # lista_teclas = ["down"]*20
     count_acertos = 0
     count_erro_tecla = 0
 
     # _________import da musica da danca_______
     # Caminho para o diretório do script atual
-    sound_1_file = os.path.join(game_design_dir, 'Game_Design', 'Music', '7_teste.mp3')
+    sound_1_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'danca_level_3_2.mp3')
     sound_1 = pygame.mixer.Sound(sound_1_file)
     sound_1_play = True
 
     # Carregar e reproduzir a música de fundo
-    background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'lust_background_music.mp3')
+    background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'treachery_background_music_2.mp3')
     pygame.mixer.music.load(background_music_file)
-    pygame.mixer.music.set_volume(get_mmpv()*0.2)
-    pygame.mixer.music.play(-1, 0, 2000)  # o valor -1 indica que a música será reproduzida em loop
+    pygame.mixer.music.set_volume(get_mmpv())
+    pygame.mixer.music.play(-1, 0, 100)  # o valor -1 indica que a música será reproduzida em loop
 
     # _________import do som de acertar a tecla______
     # Caminho para o diretório do script atual
     sound_achievement_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'achievement_sound_1.mp3')
     sound_achievement = pygame.mixer.Sound(sound_achievement_file)
     # sound_achievement_play = True
-    sound_achievement.set_volume(0.2)
+
 
     # _________import do som de errar a tecla______
     # Caminho para o diretório do script atual
     sound_loser_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'loser_sound_1.mp3')
     sound_loser = pygame.mixer.Sound(sound_loser_file)
     # sound_loser_play = True
-    sound_loser.set_volume(0.2)
+
+    sound_space_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'selection_sound_2.wav')
+    sound_space = pygame.mixer.Sound(sound_space_file)
 
     clock = pygame.time.Clock()
     set_judge = False
@@ -298,6 +310,7 @@ def play():
     comeca_a_danca = False
     passar_nivel = False
     intro = False
+    intro_fail_bool = False
     mostratutorial = False
     acertou_tecla_up = False
     acertou_tecla_left = False
@@ -314,9 +327,10 @@ def play():
             pygame.mouse.set_visible(True)
 
         # colocar o volume de musica do mapa
-        sound_1.set_volume(get_mmpv())
+        sound_1.set_volume(get_mmpv()*0.5)
         sound_achievement.set_volume(get_sev()*0.15)
         sound_loser.set_volume(get_sev()*0.15)
+        sound_space.set_volume(get_sev() * 0.10)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -324,6 +338,7 @@ def play():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Verifica se o clique do mouse foi dentro do botão "Sair"
                 if button_rect.collidepoint(event.pos):
+                    sound_space.play()
                     run = False
                     pygame.mixer.fadeout(500)
                     pygame.mouse.set_visible(True)
@@ -331,37 +346,41 @@ def play():
             elif event.type == pygame.KEYDOWN:
                 # Verifica se a tecla pressionada foi a tecla "Esc"
                 if event.key == pygame.K_ESCAPE:
-                    conversa = 1
-                    conversa_terminada = False
-                    sound_1.fadeout(1000)
-                    pygame.mixer.music.play(1, 0, 1000)
-                    sound_loser.fadeout(1000)
-                    sound_achievement.fadeout(1000)
-                    danca = False
-                    danca_init = False
-                    comeca_a_danca = False
-                    sound_1_play = True
-                    sequence = 0
-                    count_acertos = 0
-                    count_erro_tecla = 0
-                    acertou_tecla = False
-                    alpha = 0
-                    alpha2 = 255
-                    errou_na_tecla = False
-                    jogou_uma_vez = False
-                    if set_judge == True:
-                        if not passar_nivel:
-                            #judge_x -= 470
-                            #judge_y += 350
-                            set_judge = False
+                    if danca == True:
+                        sound_space.play()
+                        conversa = 1
+                        conversa_terminada = False
+                        sound_1.fadeout(1000)
+                        pygame.mixer.music.play(1, 0, 1000)
+                        sound_loser.fadeout(1000)
+                        sound_achievement.fadeout(1000)
+                        danca = False
+                        danca_init = False
+                        comeca_a_danca = False
+                        sound_1_play = True
+                        sequence = 0
+                        count_acertos = 0
+                        count_erro_tecla = 0
+                        acertou_tecla = False
+                        alpha = 0
+                        alpha2 = 255
+                        errou_na_tecla = False
+                        jogou_uma_vez = False
+                        if set_judge == True:
+                            if not passar_nivel:
+                                #judge_x -= 470
+                                #judge_y += 350
+                                set_judge = False
                 elif event.key == pygame.K_i:
                     if danca == False:
+                        sound_space.play()
                         if mostratutorial == True:
                             mostratutorial = False
                         else:
                             mostratutorial = True
                 elif event.key == pygame.K_SPACE:
                     if danca_init == True and conversa_terminada == False:
+                        sound_space.play()
                         if conversa == 1:
                             conversa=2
                         elif conversa == 2:
@@ -446,7 +465,7 @@ def play():
                 if (mapa_y <= -2100):
                     danca_init = True
 
-        print(mapa_x, mapa_y)
+        #print(mapa_x, mapa_y)
 
         screen.fill(BLUE_MAP)
 
@@ -509,7 +528,11 @@ def play():
             # Cria uma superfície temporária com o mesmo tamanho do botão e com canal alfa
             button_surface = pygame.Surface(button_rect2.size, pygame.SRCALPHA)
             # Preenche a superfície temporária com a cor preta e o valor alfa
-            button_surface.fill((*BLACK, button_alpha))
+            button_surface.fill((0, 0, 0, 0))
+            # Blita a superfície temporária na tela
+            # screen.blit(button_surface, button_rect2.topleft)
+            # Desenha o retângulo com cantos arredondados na superfície temporária
+            pygame.draw.rect(button_surface, (*BLACK, button_alpha), button_surface.get_rect(), 0, 10, 0, 15, 0, 15)
             # Blita a superfície temporária na tela
             screen.blit(button_surface, button_rect2.topleft)
 
@@ -527,7 +550,7 @@ def play():
 
         if comeca_a_danca == True:
             if sound_1_play == True:
-                sound_1.play(0,0,7000)
+                sound_1.play(0,0,10000)
                 sound_1_play = False
 
             #animação judge a agitar a cauda
@@ -657,15 +680,41 @@ def play():
                     sound_achievement.fadeout(1000)
                     sound_loser.fadeout(1000)
                     jogou_uma_vez = False
-                if sequence == 20:
-                    danca = False
-                    danca_init = False
-                    passar_nivel = True
-                    comeca_a_danca = False
-                    sound_1.fadeout(1000)
-                    pygame.mixer.music.play(1, 0, 1000)
+                if sequence == 30:
+                    if count_acertos >= 25:
+                        danca = False
+                        danca_init = False
+                        passar_nivel = True
+                        comeca_a_danca = False
+                        sound_1.fadeout(2000)
+                        pygame.mixer.music.play(1, 0, 2000)
+                    else:
+                        intro_fail_bool = True
+                        conversa = 1
+                        conversa_terminada = False
+                        sound_1.fadeout(1000)
+                        pygame.mixer.music.play(1, 0, 1000)
+                        sound_loser.fadeout(1000)
+                        sound_achievement.fadeout(1000)
+                        danca = False
+                        danca_init = False
+                        comeca_a_danca = False
+                        sound_1_play = True
+                        sequence = 0
+                        count_acertos = 0
+                        count_erro_tecla = 0
+                        acertou_tecla = False
+                        alpha = 0
+                        alpha2 = 255
+                        errou_na_tecla = False
+                        jogou_uma_vez = False
+                        if set_judge == True:
+                            if not passar_nivel:
+                                # judge_x -= 470
+                                # judge_y += 350
+                                set_judge = False
 
-            if sequence < 20:
+            if sequence < 30:
                 # se o jogador clicar na tecla errada
                 if (lista_teclas[sequence] != "up" and (keys[pygame.K_w] or keys[pygame.K_UP])) or (
                         lista_teclas[sequence] != "left" and (keys[pygame.K_a] or keys[pygame.K_LEFT])) or (
@@ -751,6 +800,24 @@ def play():
 
             print(count_acertos)
 
+        # _______imprime opcao para fazer restart________
+        if danca == True:
+            text_surface = text_font.render("Restart [press Esc]", True, WHITE)
+            text_rect = text_surface.get_rect(center=button_rect3.center)
+            screen.blit(text_surface, text_rect)
+
+        # ________apresentar intro de fail__________
+        if intro_fail_bool == True:
+            intro_fail.set_alpha(alpha_intro_fail)
+            screen.blit(intro_fail, ((screen_w - intro_fail.get_width()) // 2, (screen_h - intro_fail.get_height()) // 2))
+            alpha_intro_fail += 5
+            if alpha_intro_fail > 555 :
+                intro_fail_bool = False
+        if intro_fail_bool == False:
+            if alpha_intro_fail > 0:
+                intro_fail.set_alpha(alpha_intro_fail)
+                screen.blit(intro_fail, ((screen_w - intro_fail.get_width()) // 2, (screen_h - intro_fail.get_height()) // 2))
+                alpha_intro_fail -= 5
 
         # _________depois de passar o nivel sai do jogo pelas escadas_______
         if passar_nivel == True:
@@ -760,10 +827,9 @@ def play():
                 pygame.mouse.set_visible(True)
                 menu.init_main_menu()
 
-
         # ____________botao de sair_____________________________
         # Desenha o botão "Sair"
-        pygame.draw.rect(screen, RED, button_rect)
+        pygame.draw.rect(screen, RED, button_rect,0,10,0,0,15,0)
 
         # Adiciona texto ao botão "Sair"
         text_surface = text2_font.render("x", True, WHITE)

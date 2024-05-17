@@ -7,7 +7,7 @@ import slider
 from func import *
 import narrative
 import lv1 
-import lv2 
+import lv2
 
 pygame.init()
 
@@ -90,18 +90,26 @@ bg_menu_dir = os.path.join(game_design_dir, 'Game_Design', 'Animations', 'backgr
 bg_menu = []
 
 
+
 def draw_text(text, font, text_col, x, y):
   img = font.render(text, True, text_col)
   screen.blit(img, (x - img.get_width()//2, y))
-  
+
 
 clock = pygame.time.Clock()
 
 def init_main_menu():
 
-    background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'lenha_arder.mp3')
+    background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'music_menu_2.mp3')
     pygame.mixer.music.load(background_music_file)
     pygame.mixer.music.play(-1,0,1000)  # o valor -1 indica que a música será reproduzida em loop
+
+    lenha_arder_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'lenha_arder_2.mp3')
+    lenha_arder = pygame.mixer.Sound(lenha_arder_file)
+    lenha_arder.play(-1, 0, 1000)  # o valor -1 indica que a música será reproduzida em loop
+
+    sound_space_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'selection_sound_2.wav')
+    sound_space = pygame.mixer.Sound(sound_space_file)
 
     print(" menu iniciado\n")
     menu_state = "main"
@@ -136,6 +144,8 @@ def init_main_menu():
     while run:
 
         pygame.mixer.music.set_volume(get_mmv())
+        lenha_arder.set_volume(get_sev())
+        sound_space.set_volume(get_sev() * 0.10)
 
         pos = pygame.mouse.get_pos()
         mouse = pygame.mouse.get_pressed()
@@ -163,10 +173,14 @@ def init_main_menu():
             #draw pause screen buttons
             if resume_button.draw(screen):
                 menu_state = "dance"
+                sound_space.play()
             if options_button.draw(screen):
                 menu_state = "options"
+                sound_space.play()
             if quit_button.draw(screen):
+                sound_space.play()
                 pygame.quit()
+
         #check if the options menu is open
         if menu_state == "options":
             screen.blit(picture, (0, 0))
@@ -213,13 +227,15 @@ def init_main_menu():
                 slider.render(screen)
 
             if back_button.draw(screen):
+                sound_space.play()
                 menu_state = "main"
 
         
         if menu_state == "dance":
             print("Iniciar\n")
             #run = False
-            pygame.mixer.music.stop()
+            pygame.mixer.music.fadeout(100)
+            lenha_arder.fadeout(100)
             narrative.narrate()
 
         #event handler

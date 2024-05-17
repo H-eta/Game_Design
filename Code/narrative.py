@@ -23,6 +23,9 @@ narrativa = []
 background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'narrative_sound.mp3')
 pygame.mixer.music.load(background_music_file)
 
+sound_space_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'selection_sound_2.wav')
+sound_space = pygame.mixer.Sound(sound_space_file)
+
 TEXT_COL = (0, 0, 0)
 center = (screen.get_size()[0]//2, screen.get_size()[1]//2)
 
@@ -76,12 +79,14 @@ def narrate():
     while run:
 
         pygame.mixer.music.set_volume(get_mmv())
+        sound_space.set_volume(get_sev() * 0.02)
         # Desenha o jogador 
         #frame_index_narr += 0.001
 
         if frame_index_narr >= len(narrativa):
             run = False
             pygame.mixer.fadeout(100)
+            sound_space.play()
             lv1.play()
 
         screen.blit(narrativa[int(frame_index_narr)], (0,0))
@@ -155,9 +160,11 @@ def narrate():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    sound_space.play()
                     frame_index_narr += 1
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    sound_space.play()
                     run = False
                     pygame.mouse.set_visible(True)
                     menu.init_main_menu()
