@@ -352,7 +352,7 @@ def play():
     # __________textos para cutscene____
     TEXT_COL = (0, 0, 0)
     space = "[SPACE]"
-    text01 = "Minos was impressed! He offers you another piece of the"
+    text01 = "Minos was impressed. He offers you another piece of the"
     text02 = "contract. Now, with all the pieces, you can read it as it was"
     text03 = "meant to be read."
     text11 = "It seems that the only way out is to impress the one that"
