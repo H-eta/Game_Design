@@ -249,6 +249,18 @@ def play():
     tutorial = pygame.image.load(tutorial_path).convert_alpha()
     tutorial = pygame.transform.scale(tutorial, (tutorial.get_width() * 0.8, tutorial.get_height() * 0.8))
 
+    # ________cutscenes finais___________
+    final_cutscene_dir = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'Narrative')
+    final_cutscene = []
+    for i in range(4):
+        frame_path = os.path.join(final_cutscene_dir, f'{i+17}.png')
+        frame = pygame.image.load(frame_path).convert_alpha()
+        frame_w = frame.get_width()
+        frame_h = frame.get_height()
+        frame = pygame.transform.scale(frame, (1920, 1080))
+        final_cutscene.append(frame)
+    frame_index_narr = 0
+
     # Define o fator de zoom
     zoom_factor = 4
 
@@ -337,6 +349,18 @@ def play():
     sound_space_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'selection_sound_2.wav')
     sound_space = pygame.mixer.Sound(sound_space_file)
 
+    # __________textos para cutscene____
+    TEXT_COL = (0, 0, 0)
+    space = "[SPACE]"
+    text01 = "Minos was impressed! He offers you another piece of the"
+    text02 = "contract. Now, with all the pieces, you can read it as it was"
+    text03 = "meant to be read."
+    text11 = "It seems that the only way out is to impress the one that"
+    text12 = "casted this curse on you. The Devil himself..."
+    text21 = "The Devil is also bonded by his contract. If you can also"
+    text22 = "impress the Devil, he will be forced to honor it. But be careful,"
+    text23 = "such action is easier said than done..."
+
     clock = pygame.time.Clock()
     set_judge = False
     danca = False
@@ -404,13 +428,26 @@ def play():
                                 judge_x -= 470
                                 judge_y += 350
                                 set_judge = False
-                elif event.key == pygame.K_i:
+                if event.key == pygame.K_i:
                     if danca == False:
                         sound_space.play()
                         if mostratutorial == True:
                             mostratutorial = False
                         else:
                             mostratutorial = True
+                if passar_nivel == True:
+                    if frame_index_narr == 0:
+                        sound_space.play()
+                        frame_index_narr = frame_index_narr + 1
+                    elif frame_index_narr == 1:
+                        sound_space.play()
+                        frame_index_narr = frame_index_narr + 1
+                    elif frame_index_narr == 2:
+                        sound_space.play()
+                        frame_index_narr = frame_index_narr + 1
+                    elif frame_index_narr == 3:
+                        sound_space.play()
+                        frame_index_narr = frame_index_narr + 1
 
         # _________________deslocaao do player_______________
         # Obtém as teclas pressionadas
@@ -842,6 +879,26 @@ def play():
 
         # _________depois de passar o nivel sai do jogo pelas escadas_______
         if passar_nivel == True:
+            if frame_index_narr == 0:
+                screen.blit(final_cutscene[int(frame_index_narr)], (0, 0))
+                screen.blit(getTextFont().render(text01, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 290))
+                screen.blit(getTextFont().render(text02, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 350))
+                screen.blit(getTextFont().render(text03, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 410))
+                screen.blit(getTextFont().render(space, True, TEXT_COL), (screen_w / 2 + 460, screen_h / 2 + 420))
+            if frame_index_narr == 1:
+                screen.blit(final_cutscene[int(frame_index_narr)], (0, 0))
+                screen.blit(getTextFont().render(text11, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 290))
+                screen.blit(getTextFont().render(text12, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 350))
+                screen.blit(getTextFont().render(space, True, TEXT_COL), (screen_w / 2 + 460, screen_h / 2 + 420))
+            if frame_index_narr == 2:
+                screen.blit(final_cutscene[int(frame_index_narr)], (0, 0))
+                screen.blit(getTextFont().render(text21, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 290))
+                screen.blit(getTextFont().render(text22, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 350))
+                screen.blit(getTextFont().render(text23, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 410))
+                screen.blit(getTextFont().render(space, True, TEXT_COL), (screen_w / 2 + 460, screen_h / 2 + 420))
+            if frame_index_narr == 3:
+                screen.blit(final_cutscene[int(frame_index_narr)], (0, 0))
+                screen.blit(getTextFont().render(space, True, TEXT_COL), (screen_w / 2 + 460, screen_h / 2 + 420))
             if danca == False and mapa_x <= -3480 and mapa_y <= -2915 and mapa_x > -3585 and mapa_y > -3120:
                 run = False
                 pygame.mixer.music.fadeout(1000)
