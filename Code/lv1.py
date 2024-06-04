@@ -22,8 +22,8 @@ def play():
     button_alpha = 150  # Valor de alfa (0-255)
 
     button_rect = pygame.Rect(screen_w - 70, 0, 70, 60)
-    button_rect2 = pygame.Rect(0, 50, 270, 80)
-    button_rect3 = pygame.Rect(0, 50, 300, 80)
+    button_rect2 = pygame.Rect(0, -10, 270, 80)
+    button_rect3 = pygame.Rect(0, 0, 300, 80)
     rect_battle1 = pygame.Rect(0, 0, screen_w, 160)
     rect_battle2 = pygame.Rect(0, screen_h - 160, screen_w, 160)
     font = pygame.font.Font(None, 36)
@@ -226,6 +226,20 @@ def play():
     balao_judge_2 = pygame.transform.scale(balao_judge_2,
                                            (balao_judge_2.get_width() * 0.4, balao_judge_2.get_height() * 0.4))
 
+    # _______importacao balao judge 3_________
+    balao_judge_3 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'limbo_lines_new')
+    balao_judge_3_path = os.path.join(balao_judge_3, f'limbo_judge_line_1_new_2.png')
+    balao_judge_3 = pygame.image.load(balao_judge_3_path).convert_alpha()
+    balao_judge_3 = pygame.transform.scale(balao_judge_3,
+                                           (balao_judge_3.get_width() * 0.4, balao_judge_3.get_height() * 0.4))
+
+    # _______importacao balao judge 4_________
+    balao_judge_4 = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'limbo_lines_new')
+    balao_judge_4_path = os.path.join(balao_judge_4, f'limbo_judge_line_3_new_space.png')
+    balao_judge_4 = pygame.image.load(balao_judge_4_path).convert_alpha()
+    balao_judge_4 = pygame.transform.scale(balao_judge_4,
+                                           (balao_judge_4.get_width() * 0.4, balao_judge_4.get_height() * 0.4))
+
     # ________importar silhuetas__________
     sil_up = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'silhouette')
     sil_up_path = os.path.join(sil_up, f'up_move_silhouette_new.png')
@@ -265,7 +279,7 @@ def play():
 
     # __________importar tutorial de jogo_______________
     tutorial = os.path.join(game_design_dir, 'Game_Design', 'Sprites', 'background')
-    tutorial_path = os.path.join(tutorial, f'controls_panel_complete.png')
+    tutorial_path = os.path.join(tutorial, f'controls_panel_complete_2.png')
     tutorial = pygame.image.load(tutorial_path).convert_alpha()
     tutorial = pygame.transform.scale(tutorial, (tutorial.get_width() * 0.8, tutorial.get_height() * 0.8))
 
@@ -353,9 +367,9 @@ def play():
 
     # Carregar e reproduzir a música de fundo
     background_music_file = os.path.join(game_design_dir, 'Game_Design', 'Music', 'new_map_limbo.mp3')
-    pygame.mixer.music.load(background_music_file)
-    pygame.mixer.music.set_volume(get_mmpv() * 0.2)
-    pygame.mixer.music.play(-1,0,2000)  # o valor -1 indica que a música será reproduzida em loop
+    background_music = pygame.mixer.Sound(background_music_file)
+    #pygame.mixer.music.set_volume(get_mmpv() * 0.2)
+    background_music.play(-1,0,2000)  # o valor -1 indica que a música será reproduzida em loop
 
     # _________import do som de sussurro de npc______
     # Caminho para o diretório do script atual
@@ -368,14 +382,14 @@ def play():
     sound_achievement_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'achievement_sound_1.mp3')
     sound_achievement = pygame.mixer.Sound(sound_achievement_file)
     # sound_achievement_play = True
-    sound_achievement.set_volume(0.2)
+    #sound_achievement.set_volume(0.2)
 
     # _________import do som de errar a tecla______
     # Caminho para o diretório do script atual
     sound_loser_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'loser_sound_1.mp3')
     sound_loser = pygame.mixer.Sound(sound_loser_file)
     # sound_loser_play = True
-    sound_loser.set_volume(0.2)
+    #sound_loser.set_volume(0.2)
 
     sound_space_file = os.path.join(game_design_dir, 'Game_Design', 'Sound', 'selection_sound_2.wav')
     sound_space = pygame.mixer.Sound(sound_space_file)
@@ -403,7 +417,8 @@ def play():
     jogou_uma_vez = False
     intro = False
     intro_fail_bool = False
-    mostratutorial=False
+    mostratutorial = False
+    mostracutscene = False
     run = True
     while run:
         pygame.mouse.set_visible(False)
@@ -411,7 +426,8 @@ def play():
             pygame.mouse.set_visible(True)
 
         # colocar o volume de musica do mapa
-        sound_1.set_volume(get_mmpv())
+        background_music.set_volume(get_mmv() * 0.2)
+        sound_1.set_volume(get_mmv())
         sound_achievement.set_volume(get_sev() * 0.15)
         sound_loser.set_volume(get_sev() * 0.15)
         sound_sussurro.set_volume(get_sev() * 0.1)
@@ -422,10 +438,11 @@ def play():
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Verifica se o clique do mouse foi dentro do botão "Sair"
-                if button_rect.collidepoint(event.pos):
+                if button_rect.collidepoint(event.pos) and mostratutorial == False:
                     sound_space.play()
                     run = False
-                    pygame.mixer.fadeout(500)
+                    background_music.fadeout(100)
+                    sound_1.fadeout(100)
                     pygame.mouse.set_visible(True)
                     menu.init_main_menu()
             elif event.type == pygame.KEYDOWN:
@@ -434,7 +451,7 @@ def play():
                     if danca == True:
                         sound_space.play()
                         sound_1.fadeout(1000)
-                        pygame.mixer.music.play(1, 0, 1000)
+                        background_music.play(1, 0, 1000)
                         sound_loser.fadeout(1000)
                         sound_achievement.fadeout(1000)
                         danca = False
@@ -444,7 +461,12 @@ def play():
                         sequence = 0
                         count_acertos = 0
                         count_erro_tecla = 0
-                        acertou_tecla = False
+                        acertou_tecla_up = False
+                        acertou_tecla_left = False
+                        acertou_tecla_right = False
+                        frame_index_player_dance_good = 0
+                        frame_index_player_dance_bad = 0
+                        frame_index_player_dance = 0
                         alpha = 0
                         alpha2 = 255
                         errou_na_tecla = False
@@ -461,8 +483,11 @@ def play():
                             mostratutorial = False
                         else:
                             mostratutorial = True
-                if passar_nivel == True:
+                if event.key == pygame.K_SPACE and passar_nivel == True:
                     if frame_index_narr == 0:
+                        sound_space.play()
+                        frame_index_narr = frame_index_narr + 1
+                    elif frame_index_narr == 1:
                         sound_space.play()
                         frame_index_narr = frame_index_narr + 1
 
@@ -474,7 +499,7 @@ def play():
             player_y += 5
             boat_y += 5
             mostratutorial = False
-        elif danca == False:
+        elif danca == False and mostracutscene == False:
             # Atualiza a posição do mapa com base nas teclas pressionadas
             if keys[pygame.K_w] or keys[pygame.K_UP]:
                 mapa_y += desl_player
@@ -546,7 +571,7 @@ def play():
             if danca == False and mapa_x <= -2975 and mapa_x >= -3250 and mapa_y <= -3640 and mapa_y >= -4015:
                 if check_npc1 == True and check_npc2 == True and check_npc3 == True:
                     danca = True
-                    pygame.mixer.music.fadeout(1000)
+                    background_music.fadeout(1000)
                     #pygame.mixer.music.pause()
                     if set_judge == False:
                         judge_x += 600
@@ -571,7 +596,10 @@ def play():
         # __________desenhar balao judge 1__________________
         # if mapa_x > -474 and mapa_x < -60 and mapa_y > -3000 and mapa_y < -2595:
         if passar_nivel == False and danca == False:
-            screen.blit(balao_judge_1, (judge_x - 110, judge_y - 140))
+            if check_npc1 == False or check_npc2 == False or check_npc3 == False:
+                screen.blit(balao_judge_1, (judge_x - 110, judge_y - 140))
+            else:
+                screen.blit(balao_judge_3, (judge_x - 110, judge_y - 140))
 
         # __________desenhar barco__________________
         screen.blit(boat, (boat_x, boat_y))
@@ -651,8 +679,14 @@ def play():
         if comeca_a_danca == False:
             screen.blit(player_walk[int(frame_index_player)], (player_x, player_y))
 
+        # ____________desenhar tutorial do jogo_________________________
+        if danca == True:
+            mostratutorial = False
+        if mostratutorial == True:
+            screen.blit(tutorial, ((screen_w - tutorial.get_width()) // 2, (screen_h - tutorial.get_height()) // 2))
+
         #_______botao para o tutorial________________
-        if player_y == (screen_h - player_walk[0].get_height()) // 2 and danca == False and intro == True and alpha_intro_map==0 and mostratutorial==False:
+        if player_y == (screen_h - player_walk[0].get_height()) // 2 and danca == False and intro == True and alpha_intro_map==0:
             # Cria uma superfície temporária com o mesmo tamanho do botão e com canal alfa
             button_surface = pygame.Surface(button_rect2.size, pygame.SRCALPHA)
             # Preenche a superfície temporária com a cor preta e o valor alfa
@@ -667,12 +701,6 @@ def play():
             text_surface = text_font.render("Tutorial [press i]", True, WHITE)
             text_rect = text_surface.get_rect(center=button_rect2.center)
             screen.blit(text_surface, text_rect)
-
-        # ____________desenhar tutorial do jogo_________________________
-        if danca == True:
-            mostratutorial = False
-        if mostratutorial == True:
-            screen.blit(tutorial, ((screen_w-tutorial.get_width())//2, (screen_h-tutorial.get_height())//2))
 
         # _______posiciona o player na zona de danca__________
         if danca == True:
@@ -788,13 +816,13 @@ def play():
                             passar_nivel = True
                             comeca_a_danca = False
                             sound_1.fadeout(2000)
-                            pygame.mixer.music.play(1, 0, 1000)
+                            background_music.play(1, 0, 1000)
                             sound_loser.fadeout(1000)
                             sound_achievement.fadeout(1000)
                         else:
                             intro_fail_bool = True
                             sound_1.fadeout(1000)
-                            pygame.mixer.music.play(1, 0, 1000)
+                            background_music.play(1, 0, 1000)
                             sound_loser.fadeout(1000)
                             sound_achievement.fadeout(1000)
                             danca = False
@@ -804,7 +832,12 @@ def play():
                             sequence = 0
                             count_acertos = 0
                             count_erro_tecla = 0
-                            acertou_tecla = False
+                            acertou_tecla_up = False
+                            acertou_tecla_left = False
+                            acertou_tecla_right = False
+                            frame_index_player_dance_good = 0
+                            frame_index_player_dance_bad = 0
+                            frame_index_player_dance = 0
                             alpha = 0
                             alpha2 = 255
                             errou_na_tecla = False
@@ -827,6 +860,14 @@ def play():
 
                 # se a tecla for a correta faz a ação de dança correspodente
                 if acertou_tecla_up == True or acertou_tecla_left == True or acertou_tecla_right == True:
+                    # imprime os blilhos de acertar na tecla alem da animação da danca
+                    if frame_index_player_dance_good < len(player_dance_good):
+                        if frame_index_player_dance_good == 0:
+                            sound_achievement.play()
+                        screen.blit(player_dance_good[int(frame_index_player_dance_good)],
+                                    (player_x - 20, player_y - 30))
+                        frame_index_player_dance_good += 0.25
+
                     if acertou_tecla_up == True:
                         # Desenha o jogador a dançar
                         # rect_ocultar_player = pygame.Rect(player_x, player_y, (player_walk[0].get_width() / 2),
@@ -858,13 +899,6 @@ def play():
                             acertou_tecla_right = False
                             frame_index_player_dance = 0
 
-                        # imprime os blilhos de acertar na tecla alem da animação da danca
-                    if frame_index_player_dance_good < len(player_dance_good):
-                        sound_achievement.play()
-                        screen.blit(player_dance_good[int(frame_index_player_dance_good)],
-                                    (player_x - 20, player_y - 30))
-                        frame_index_player_dance_good += 0.25
-
                 # se nao for clicada nenhuma tecla ou for errada imprime o player na animação normal
                 else:
                     # rect_ocultar_player = pygame.Rect(player_x, player_y, (player_walk[0].get_width()/2),
@@ -873,9 +907,10 @@ def play():
                     screen.blit(player_walk[int(frame_index_player)], (player_x, player_y))
                     # se errou na tecla imprime a nuvem no mc
                     if frame_index_player_dance_bad < len(player_dance_bad) and errou_na_tecla == True:
+                        if frame_index_player_dance_bad == 0:
+                            sound_loser.play()
                         screen.blit(player_dance_bad[int(frame_index_player_dance_bad)], (player_x - 20, player_y - 30))
                         frame_index_player_dance_bad += 0.25
-                        sound_loser.play()
                         if frame_index_player_dance_bad >= len(player_dance_bad):
                             errou_na_tecla = False
                             frame_index_player_dance_bad = 0
@@ -911,26 +946,32 @@ def play():
     #_________depois de passar o nivel sai do jogo pelas escadas_______
         if passar_nivel == True:
             if frame_index_narr == 0:
-                screen.blit(final_cutscene[int(frame_index_narr)], (0, 0))
+                mostracutscene = True
+                screen.blit(balao_judge_4, (judge_x - 110, judge_y - 140))
+            if frame_index_narr == 1:
+                screen.blit(final_cutscene[int(frame_index_narr-1)], (0, 0))
                 screen.blit(getTextFont().render(text01, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 290))
                 screen.blit(getTextFont().render(text02, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 350))
                 screen.blit(getTextFont().render(text03, True, TEXT_COL), (screen_w / 2 - 580, screen_h / 2 + 410))
                 screen.blit(getTextFont().render(space, True, TEXT_COL), (screen_w / 2 + 460, screen_h / 2 + 420))
+            if frame_index_narr == 2:
+                mostracutscene = False
             if danca == False and mapa_x <= -3910 and mapa_y <= -3750:
                 run = False
-                pygame.mixer.music.fadeout(1000)
+                background_music.fadeout(1000)
                 #pygame.mouse.set_visible(True)
                 lv2.play()
 
     #____________botao de sair_____________________________
         # Desenha o botão "Sair"
-        pygame.draw.rect(screen, RED, button_rect,0,10,0,0,15,0)
+        if mostratutorial == False:
+            pygame.draw.rect(screen, RED, button_rect,0,10,0,0,15,0)
 
-        # Adiciona texto ao botão "Sair"
-        text_surface = text2_font.render("x", True, WHITE)
-        text_rect = text_surface.get_rect(center=button_rect.center)
-        text_rect.centery -= 10
-        screen.blit(text_surface, text_rect)
+            # Adiciona texto ao botão "Sair"
+            text_surface = text2_font.render("x", True, WHITE)
+            text_rect = text_surface.get_rect(center=button_rect.center)
+            text_rect.centery -= 10
+            screen.blit(text_surface, text_rect)
 
         pygame.display.update()
 

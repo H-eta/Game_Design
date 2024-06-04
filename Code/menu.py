@@ -143,9 +143,17 @@ def init_main_menu():
     run = True
     while run:
 
+        if menu_state == "dance":
+            print("Iniciar\n")
+            run = False
+            sound_space.stop()
+            pygame.mixer.music.stop()
+            lenha_arder.stop()
+            narrative.narrate()
+
         pygame.mixer.music.set_volume(get_mmv())
         lenha_arder.set_volume(get_sev())
-        sound_space.set_volume(get_sev() * 0.10)
+        sound_space.set_volume(get_sev()*0.10)
 
         pos = pygame.mouse.get_pos()
         mouse = pygame.mouse.get_pressed()
@@ -229,14 +237,6 @@ def init_main_menu():
             if back_button.draw(screen):
                 sound_space.play()
                 menu_state = "main"
-
-        
-        if menu_state == "dance":
-            print("Iniciar\n")
-            #run = False
-            pygame.mixer.music.fadeout(100)
-            lenha_arder.fadeout(100)
-            narrative.narrate()
 
         #event handler
         for event in pygame.event.get():
