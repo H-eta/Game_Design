@@ -83,7 +83,7 @@ def narrate():
             run = False
             background_music.fadeout(100)
             sound_space.play()
-            lv3.play()
+            lv1.play()
 
         screen.blit(narrativa[int(frame_index_narr)], (0,0))
 
