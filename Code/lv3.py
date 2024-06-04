@@ -874,7 +874,7 @@ def play():
             intro_fail.set_alpha(alpha_intro_fail)
             screen.blit(intro_fail, ((screen_w - intro_fail.get_width()) // 2, (screen_h - intro_fail.get_height()) // 2))
             alpha_intro_fail += 5
-            if alpha_intro_fail > 555 :
+            if alpha_intro_fail > 225:
                 intro_fail_bool = False
         if intro_fail_bool == False:
             if alpha_intro_fail > 0:
