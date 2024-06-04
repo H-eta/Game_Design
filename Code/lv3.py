@@ -407,7 +407,7 @@ def play():
                                 #judge_y += 350
                                 set_judge = False
                 elif event.key == pygame.K_i:
-                    if danca == False:
+                    if danca == False and passar_nivel == False:
                         sound_space.play()
                         if mostratutorial == True:
                             mostratutorial = False

@@ -452,7 +452,7 @@ def play():
                                 judge_y += 350
                                 set_judge = False
                 if event.key == pygame.K_i:
-                    if danca == False:
+                    if danca == False and mostracutscene == False:
                         sound_space.play()
                         if mostratutorial == True:
                             mostratutorial = False
